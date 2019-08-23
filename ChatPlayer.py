@@ -18,7 +18,7 @@ class Chat_player:
     def __init__(self):
         self.command_list = []
         self.plain_font_size = 40
-        self.plain_font = pygame.font.Font("Koruri-Semibold.ttf", self.plain_font_size)
+        self.plain_font = pygame.font.Font("source/Koruri-Semibold.ttf", self.plain_font_size)
         self.niconico_line = 0
         self.niconico_line_max = 12
         self.pre_command = []
@@ -111,7 +111,7 @@ getter      = Chat_getter("https://www.youtube.com/live_chat?is_popout=1&v=Sflq-
 chats       = []
 
 def main():
-    global getter, chats, pre_chats
+    global getter, chats
     pygame.init()
     screen = pygame.display.set_mode(DISPLAY_SIZE)
     pygame.display.set_caption("ChatPlayer")
@@ -121,7 +121,6 @@ def main():
         screen.fill(BACK_COLOR)
 
         chat_renders = player.draw(chats)
-        
         if (not chat_renders == None) and (not chat_renders == []):
             for chat_render in chat_renders:
                 screen.blit(chat_render["chat"], chat_render["pos"])
