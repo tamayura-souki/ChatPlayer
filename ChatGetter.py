@@ -25,10 +25,9 @@ class Chat_getter:
         options.add_argument('--headless')
         self.driver     = webdriver.Chrome(options=options)
         self.sent_chat  = [['','']]
-
-    def get_chats(self, chat_selector:str = 'yt-live-chat-renderer'):
         self.driver.get(self.url)
 
+    def get_chats(self, chat_selector:str = 'yt-live-chat-renderer'):
         # チャット欄のテキスト取得、チャット以外を消す
         elements  = self.driver.find_element_by_css_selector(chat_selector)
         words     = [e for e in elements.text.split('\n')]
