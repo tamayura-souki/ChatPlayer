@@ -9,6 +9,7 @@ import time
 import concurrent.futures
 
 from ChatGetter import Chat_getter
+import pygame_utilities as pygu
 
 DISPLAY_SIZE = (1280,720)
 BACK_COLOR   = (0,255,0)
@@ -59,15 +60,15 @@ class Chat_player:
 
         chat  = command_request[0] + ' : ' + command_request[1].split(' ')[-1]
         color = (255,255,255)
-        speed = 2.5
+        speed = 1.5
         if '/unk' in command_request[1]:
             chat = command_request[1].split(' ')[-1]
 
         if '/fast' in command_request[1]:
-            speed = 4
+            speed = 3
         
         elif '/slow' in command_request[1]:
-            speed = 1.5
+            speed = 0.5
         
         if '/red' in command_request[1]:
             color = (255,0,0)
@@ -107,7 +108,7 @@ class command:
 class Niconico(command):
     # 画面を16行にわる
     def __init__(self, comment:str, font_type, line:int, speed=2.5, color=(255,255,255),
-                 display_size=(1920,1080), line_max=16):
+                 display_size=(1920,1080), line_max=16, back_color = (30,30,30)):
         super(Niconico, self).__init__()
         self.comment    = comment
         self.font_type  = font_type
@@ -115,11 +116,12 @@ class Niconico(command):
         self.speed      = speed
         self.pos        = [display_size[0]-speed, display_size[1]*line/line_max]
         self.display_size = display_size
-        self.color  = color
+        self.color      = color
+        self.back_color = back_color
 
     def draw(self):
         self.pos[0] = self.pos[0] - self.speed
-        render = self.font_type.render(self.comment, True, self.color)
+        render = pygu.textOutline(self.font_type, self.comment, self.color, self.back_color, outline_width=1)
         if self.pos[0] + self.font_type.size(self.comment)[0] == 0:
             return None
         return [render, tuple(self.pos)]
