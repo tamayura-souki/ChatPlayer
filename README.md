@@ -13,6 +13,6 @@ youtubeチャットで遊ぶためのコード。チャットを取得して、�
 /unk チャンネル名非表示
 
 # Requirements
-selenium(chrome)
-pygame
-emoji(emoji削除用)
+- selenium(chrome)
+- pygame
+- emoji(emoji削除用)
