@@ -105,7 +105,7 @@ class command:
         return None
 
 class Niconico(command):
-    # 画面を12行にわって、上11行を使う
+    # 画面を16行にわる
     def __init__(self, comment:str, font_type, line:int, speed=2.5, color=(255,255,255),
                  display_size=(1920,1080), line_max=16):
         super(Niconico, self).__init__()
