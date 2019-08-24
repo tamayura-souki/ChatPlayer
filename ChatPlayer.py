@@ -5,7 +5,6 @@
 import pygame
 from pygame.locals import *
 import sys
-
 import time
 import concurrent.futures
 
@@ -13,6 +12,7 @@ from ChatGetter import Chat_getter
 
 DISPLAY_SIZE = (1280,720)
 BACK_COLOR   = (0,255,0)
+URL          = "https://www.youtube.com/live_chat?is_popout=1&v=Sflq-_arjDg"
 
 class Chat_player:
     def __init__(self):
@@ -22,6 +22,10 @@ class Chat_player:
         self.niconico_line = 0
         self.niconico_line_max = 12
         self.pre_command = []
+
+        self.police_sound = pygame.mixer.Sound("source/patrol-car1.wav")
+        self.medic_sound  = pygame.mixer.Sound("source/ambulance-siren1.wav")
+        self.w_sound      = pygame.mixer.Sound("source/people_people-studio-laugh-normal1.wav")
     
     def draw(self, command_requests=[]):
         # 受け取ったコマンドから、それぞれコマンドに対応したコマンドオブジェクトを生成する。        
@@ -41,30 +45,49 @@ class Chat_player:
 
 
     def command_process(self, command_request):
-        '''
-        command = command_request[1].split(' ')
-        if len(command) < 2:
-            return None
-        
-        if command[0] == '/nn':
-            self.command_list.append(
-                NicoNico(
-                    command_request[0] + ' : ' + command[-1],
-                    self.plain_font,
-                    self.niconico_line
-                )
-            )
-            self.niconico_line += 1
-            if self.niconico_line >= 12:
-                self.niconico_line = 0
-        '''
         # めんどうなので、ニコニコ風をデフォにした
         # 時間のあるときに変えよう
+
+        if '/police' in command_request[1]:
+            return self.police_sound.play()
+
+        elif '/medic' in command_request[1]:
+            return self.medic_sound.play()
+
+        elif '/w' in command_request[1]:
+            return self.w_sound.play()
+
+        chat  = command_request[0] + ' : ' + command_request[1].split(' ')[-1]
+        color = (255,255,255)
+        speed = 2.5
+        if '/unk' in command_request[1]:
+            chat = command_request[1].split(' ')[-1]
+
+        if '/fast' in command_request[1]:
+            speed = 4
+        
+        elif '/slow' in command_request[1]:
+            speed = 1.5
+        
+        if '/red' in command_request[1]:
+            color = (255,0,0)
+
+        elif '/blue' in command_request[1]:
+            color = (0,0,255)
+
+        elif '/green' in command_request[1]:
+            color = (0,255,0)
+        
+        elif '/bk' in command_request[1]:
+            color = (0,0,0)
+
         self.command_list.append(
                 Niconico(
-                    command_request[0] + ' : ' + command_request[1],
+                    chat,
                     self.plain_font,
                     self.niconico_line,
+                    speed = speed,
+                    color = color,
                     display_size=DISPLAY_SIZE,
                     line_max=self.niconico_line_max
                 )
@@ -79,12 +102,12 @@ class command:
         pass
     def draw(self):
         # 毎回呼び出される関数
-        pass
+        return None
 
 class Niconico(command):
     # 画面を12行にわって、上11行を使う
-    def __init__(self, comment:str, font_type, line:int, speed=2.5,
-                 display_size=(1920,1080), line_max=16, color=(255,255,255)):
+    def __init__(self, comment:str, font_type, line:int, speed=2.5, color=(255,255,255),
+                 display_size=(1920,1080), line_max=16):
         super(Niconico, self).__init__()
         self.comment    = comment
         self.font_type  = font_type
@@ -107,7 +130,7 @@ class Niconico(command):
     def pos(self):
         return tuple(self.pos)
 
-getter      = Chat_getter("https://www.youtube.com/live_chat?is_popout=1&v=Sflq-_arjDg")
+getter      = Chat_getter(URL)
 chats       = []
 
 def main():

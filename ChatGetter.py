@@ -4,6 +4,7 @@
 # Chat取得部分をつくる
 
 import codecs
+import emoji
 from selenium import webdriver
 
 # 取得したコマンドコメント一覧と
@@ -24,62 +25,37 @@ class Chat_getter:
         options         = webdriver.ChromeOptions()
         options.add_argument('--headless')
         self.driver     = webdriver.Chrome(options=options)
-        self.sent_chat  = [['','']]
+
+        self.sent_author_names  = []
+        self.sent_messages      = []
+
         self.driver.get(self.url)
 
-    def get_chats(self, chat_selector:str = 'yt-live-chat-renderer'):
+    def get_chats(self, author_selector='#author-name.yt-live-chat-author-chip', 
+                        message_selector='#message.yt-live-chat-text-message-renderer'):
         # チャット欄のテキスト取得、チャット以外を消す
-        elements  = self.driver.find_element_by_css_selector(chat_selector)
-        words     = [e for e in elements.text.split('\n')]
-        words     = [w for w in words if not w in self.not_chat_list]
+        author_names  = self.driver.find_elements_by_css_selector(author_selector)
+        messages      = self.driver.find_elements_by_css_selector(message_selector)
+
+        names = [name.text for name in author_names if not name in self.sent_author_names]
+        # 絵文字消す
+        chats = [''.join(c for c in chat.text if not c in emoji.UNICODE_EMOJI) 
+                    for chat in messages if not chat in self.sent_messages]
+
+        self.sent_author_names  = author_names
+        self.sent_messages      = messages
 
         # ['ユーザ名', 'チャット']でリストつくる
-        get_chats = [words[0::2], words[1::2]]
-        get_chats = [list(c) for c in zip(*get_chats)]
-
-        # 実行済みチャットからタイムアウトしたチャットを消す(再び使用可能に)
-        self.sent_chat = [c for c in self.sent_chat if c in get_chats]
-
-        # 実行済みチャット消す
-        get_chats = [c for c in get_chats if not c in self.sent_chat]
-        
-        # listの重複消したい setじゃ二次元配列無理だった
-        seen = []
-        self.sent_chat = [x for x in (self.sent_chat+get_chats) if x not in seen and not seen.append(x)]
+        get_chats = [[name, chat] for name, chat in zip(names, chats) if not chat == '']
 
         return get_chats
 
     def quit(self):
         self.driver.quit()
-#    def __del__(self):
-#        self.driver.quit()
 
-'''
-getter = Chat_getter('https://www.youtube.com/live_chat?is_popout=1&v=Sflq-_arjDg')
+if __name__ == '__main__':
+    getter = Chat_getter('https://www.youtube.com/live_chat?is_popout=1&v=Sflq-_arjDg')
 
-def chat_get():
-    return getter.get()
+    print(getter.get_chats())
 
-def quit():
-    return getter.quit()
-
-
-
-
-options = webdriver.ChromeOptions()
-options.add_argument('--headless')
-driver = webdriver.Chrome(options=options)
-
-print('start')
-
-driver.get('https://www.youtube.com/live_chat?is_popout=1&v=Sflq-_arjDg')
-
-for body in [driver.find_element_by_css_selector('yt-live-chat-renderer')]:
-    print(type(body.text))
-    print(body.text)
-
-#print(codecs.encode(driver.page_source, 'utf-8', 'ignore'))
-
-driver.save_screenshot('search_results.png')
-driver.quit()
-'''
+    getter.quit()
