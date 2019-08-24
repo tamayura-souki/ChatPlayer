@@ -7,12 +7,6 @@ import codecs
 import emoji
 from selenium import webdriver
 
-# 取得したコマンドコメント一覧と
-# すでに持っているコマンドコメント一覧を比較して、
-# 取得したコメントが、すでにある一覧にあれば、実行しない
-# 実行済みのコメントが、取得コメントの中になければ、削除し、
-# 再び実行出来るようにする。
-
 class Chat_getter:
     def __init__(self, chat_url:str, not_chat=None):
         if not_chat == None:
@@ -33,7 +27,7 @@ class Chat_getter:
 
     def get_chats(self, author_selector='#author-name.yt-live-chat-author-chip', 
                         message_selector='#message.yt-live-chat-text-message-renderer'):
-        # チャット欄のテキスト取得、チャット以外を消す
+        # チャット欄の取得
         author_names  = self.driver.find_elements_by_css_selector(author_selector)
         messages      = self.driver.find_elements_by_css_selector(message_selector)
 
