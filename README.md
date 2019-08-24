@@ -16,3 +16,6 @@ youtubeチャットで遊ぶためのコード。チャットを取得して、�
 - selenium(chrome)
 - pygame
 - emoji(emoji削除用)
+
+# License
+Please see LICENSE file.
