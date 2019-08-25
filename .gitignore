@@ -1,3 +1,5 @@
 source/
 __pycache__/
 .vscode/
+build/
+dist/
