@@ -1,0 +1,11 @@
+{
+    "plain_font_path" : "source/Koruri-Semibold.ttf",
+
+    "police_path"   : "source/patrol-car1.wav",
+    "medic_path"    : "source/ambulance-siren1.wav",
+    "laughter_path" : "source/people_people-studio-laugh-normal1.wav",
+
+    "police_vol"   : 0.1,
+    "medic_vol"    : 0.3,
+    "laughter_vol" : 0.5
+}

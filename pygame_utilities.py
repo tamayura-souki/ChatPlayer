@@ -5,7 +5,7 @@ import pygame, pygame.font, pygame.image
 from pygame.locals import *
 
 def textHollow(font, message, fontcolor, outline_width=1):
-    notcolor = [c^0xFF for c in fontcolor]
+    notcolor = (0,255,0) # [c^0xFF for c in fontcolor]
     base = font.render(message, False, fontcolor, notcolor)
     size = base.get_width() + outline_width*2, base.get_height() + outline_width*2
     img = pygame.Surface(size, 16)
@@ -21,11 +21,12 @@ def textHollow(font, message, fontcolor, outline_width=1):
     img.set_colorkey(notcolor)
     return img
 
-def textOutline(font, message, fontcolor, outlinecolor, outline_width=1):
+def textOutline(font, message, fontcolor, outlinecolor, outline_width=1, back_color=(0,255,0)):
     base = font.render(message, 0, fontcolor)
     outline = textHollow(font, message, outlinecolor, outline_width=outline_width)
     img = pygame.Surface(outline.get_size(), 16)
+    img.fill(back_color)
     img.blit(base, (outline_width, outline_width))
     img.blit(outline, (0, 0))
-    img.set_colorkey(0)
+    img.set_colorkey(back_color)
     return img

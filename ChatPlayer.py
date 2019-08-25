@@ -1,37 +1,37 @@
 # -*- coding: utf-8 -*-
 
-# PyGameで配信に映すやつをつくる
+# Chat_player クラス
 
 import pygame
 from pygame.locals import *
-import sys
-import time
-import concurrent.futures
 
-from ChatGetter import Chat_getter
 import pygame_utilities as pygu
 
-DISPLAY_SIZE = (1280,720)
-BACK_COLOR   = (0,255,0)
-# URL          = "https://www.youtube.com/live_chat?is_popout=1&v=1iKvl0SF-VY"
-URL          = "https://www.youtube.com/live_chat?is_popout=1&v=Sflq-_arjDg"
+import json
 
 class Chat_player:
-    def __init__(self):
+    def __init__(self, display_size):
+        # display_size [横, 縦]
+
+        setting = json.load(open('chat_setting.json', 'r'))
+
+        self.display_size = display_size
+
         self.command_list = []
-        self.plain_font_size = 40
-        self.plain_font = pygame.font.Font("source/Koruri-Semibold.ttf", self.plain_font_size)
         self.niconico_line = 0
         self.niconico_line_max = 12
+        self.plain_font_size = int(self.display_size[1] / self.niconico_line_max  *2/3)
+        self.plain_font = pygame.font.Font(setting['plain_font_path'], self.plain_font_size)
 
-        self.police_sound = pygame.mixer.Sound("source/patrol-car1.wav")
-        self.medic_sound  = pygame.mixer.Sound("source/ambulance-siren1.wav")
-        self.w_sound      = pygame.mixer.Sound("source/people_people-studio-laugh-normal1.wav")
-        self.police_sound.set_volume(0.3)
-        self.medic_sound.set_volume(0.5)
-        self.w_sound.set_volume(0.7)
+        self.police_sound = pygame.mixer.Sound(setting['police_path'])
+        self.medic_sound  = pygame.mixer.Sound(setting['medic_path'])
+        self.w_sound      = pygame.mixer.Sound(setting['laughter_path'])
+        self.police_sound.set_volume(setting['police_vol'])
+        self.medic_sound.set_volume(setting['medic_vol'])
+        self.w_sound.set_volume(setting['laughter_vol'])
 
         self.pre_commands = []
+
     
     def draw(self):
         if len(self.command_list) == 0:
@@ -60,16 +60,17 @@ class Chat_player:
             
         chat  = command_request[0] + ' : ' + command_request[1].split(' ')[-1]
         color = (255,255,255)
-        speed = 4
+        # 横1280で 1 frame 4
+        speed = self.display_size[0] / 320
 
         if '/unk' in command_request[1]:
             chat = command_request[1].split(' ')[-1]
 
         if '/fast' in command_request[1]:
-            speed = 8
+            speed *= 2
         
         elif '/slow' in command_request[1]:
-            speed = 1.5
+            speed = speed /4 * 1.5
         
         if '/red' in command_request[1]:
             color = (255,0,0)
@@ -90,13 +91,15 @@ class Chat_player:
                     self.niconico_line,
                     speed = speed,
                     color = color,
-                    display_size=DISPLAY_SIZE,
+                    display_size=self.display_size,
                     line_max=self.niconico_line_max
                 )
             )
         self.niconico_line += 1
         if self.niconico_line >= self.niconico_line_max:
             self.niconico_line = 0
+
+
 
 class command:
     # コマンドを処理するクラスの雛形
@@ -109,7 +112,7 @@ class command:
 class Niconico(command):
     # 画面を16行にわる
     def __init__(self, comment:str, font_type, line:int, speed=4, color=(255,255,255),
-                 display_size=(1920,1080), line_max=16, back_color = (30,30,30)):
+                 display_size=(1920,1080), line_max=16, outline_color = (30,30,30), back_color=(0,255,0)):
         super(Niconico, self).__init__()
         self.comment    = comment
         self.font_type  = font_type
@@ -118,8 +121,8 @@ class Niconico(command):
         self.pos        = [display_size[0]-speed, display_size[1]*line/line_max]
         self.display_size = display_size
         self.color      = color
-        self.back_color = back_color
-        self.render     = pygu.textOutline(self.font_type, self.comment, self.color, self.back_color, outline_width=1).convert()
+        self.outline_color = outline_color
+        self.render     = pygu.textOutline(self.font_type, self.comment, self.color, self.outline_color, outline_width=1, back_color=back_color).convert()
 
     def draw(self):
         self.pos[0] = self.pos[0] - self.speed
@@ -132,42 +135,3 @@ class Niconico(command):
 
     def pos(self):
         return tuple(self.pos)
-
-getter = Chat_getter(URL)
-player = None
-
-def main():
-    global player, getter
-
-    pygame.init()
-    screen = pygame.display.set_mode(DISPLAY_SIZE)
-    pygame.display.set_caption("ChatPlayer")
-    clock = pygame.time.Clock()
-
-    player = Chat_player()
-
-    while True:
-        clock.tick(30)
-        screen.fill(BACK_COLOR)
-
-        chat_renders = player.draw()
-        if (not chat_renders == None) and (not chat_renders == []):
-            [screen.blit(chat_render["chat"], chat_render["pos"]) for chat_render in chat_renders]
-
-        pygame.display.update()
-        
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                pygame.quit()
-                getter.quit()
-                sys.exit()
-
-def command_get():
-    global getter, player
-    while True:
-        [player.command_process(c) for c in getter.get_chats()]
-        time.sleep(1)
-
-executor = concurrent.futures.ThreadPoolExecutor(max_workers=2)
-executor.submit(main)
-executor.submit(command_get)
