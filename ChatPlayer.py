@@ -13,6 +13,7 @@ import pygame_utilities as pygu
 
 DISPLAY_SIZE = (1280,720)
 BACK_COLOR   = (0,255,0)
+# URL          = "https://www.youtube.com/live_chat?is_popout=1&v=1iKvl0SF-VY"
 URL          = "https://www.youtube.com/live_chat?is_popout=1&v=Sflq-_arjDg"
 
 class Chat_player:
@@ -22,18 +23,17 @@ class Chat_player:
         self.plain_font = pygame.font.Font("source/Koruri-Semibold.ttf", self.plain_font_size)
         self.niconico_line = 0
         self.niconico_line_max = 12
-        self.pre_command = []
 
         self.police_sound = pygame.mixer.Sound("source/patrol-car1.wav")
         self.medic_sound  = pygame.mixer.Sound("source/ambulance-siren1.wav")
         self.w_sound      = pygame.mixer.Sound("source/people_people-studio-laugh-normal1.wav")
-    
-    def draw(self, command_requests=[]):
-        # 受け取ったコマンドから、それぞれコマンドに対応したコマンドオブジェクトを生成する。        
-        if (command_requests != []) and (command_requests != self.pre_command):
-            [self.command_process(c) for c in command_requests]
-            self.pre_command = command_requests
+        self.police_sound.set_volume(0.3)
+        self.medic_sound.set_volume(0.5)
+        self.w_sound.set_volume(0.7)
 
+        self.pre_commands = []
+    
+    def draw(self):
         if len(self.command_list) == 0:
             return None
 
@@ -46,29 +46,30 @@ class Chat_player:
 
 
     def command_process(self, command_request):
-        # めんどうなので、ニコニコ風をデフォにした
-        # 時間のあるときに変えよう
-
+        # コマンドを処理する
         if '/police' in command_request[1]:
+            self.police_sound.stop()
             return self.police_sound.play()
 
         elif '/medic' in command_request[1]:
+            self.medic_sound.stop()
             return self.medic_sound.play()
 
         elif '/w' in command_request[1]:
             return self.w_sound.play()
-
+            
         chat  = command_request[0] + ' : ' + command_request[1].split(' ')[-1]
         color = (255,255,255)
-        speed = 1.5
+        speed = 4
+
         if '/unk' in command_request[1]:
             chat = command_request[1].split(' ')[-1]
 
         if '/fast' in command_request[1]:
-            speed = 3
+            speed = 8
         
         elif '/slow' in command_request[1]:
-            speed = 0.5
+            speed = 1.5
         
         if '/red' in command_request[1]:
             color = (255,0,0)
@@ -107,7 +108,7 @@ class command:
 
 class Niconico(command):
     # 画面を16行にわる
-    def __init__(self, comment:str, font_type, line:int, speed=2.5, color=(255,255,255),
+    def __init__(self, comment:str, font_type, line:int, speed=4, color=(255,255,255),
                  display_size=(1920,1080), line_max=16, back_color = (30,30,30)):
         super(Niconico, self).__init__()
         self.comment    = comment
@@ -118,13 +119,13 @@ class Niconico(command):
         self.display_size = display_size
         self.color      = color
         self.back_color = back_color
+        self.render     = pygu.textOutline(self.font_type, self.comment, self.color, self.back_color, outline_width=1).convert()
 
     def draw(self):
         self.pos[0] = self.pos[0] - self.speed
-        render = pygu.textOutline(self.font_type, self.comment, self.color, self.back_color, outline_width=1)
-        if self.pos[0] + self.font_type.size(self.comment)[0] == 0:
+        if self.pos[0] + self.font_type.size(self.comment)[0] <= 0:
             return None
-        return [render, tuple(self.pos)]
+        return [self.render, tuple(self.pos)]
 
     def line(self):
         return line
@@ -132,38 +133,41 @@ class Niconico(command):
     def pos(self):
         return tuple(self.pos)
 
-getter      = Chat_getter(URL)
-chats       = []
+getter = Chat_getter(URL)
+player = None
 
 def main():
-    global getter, chats
+    global player, getter
+
     pygame.init()
     screen = pygame.display.set_mode(DISPLAY_SIZE)
     pygame.display.set_caption("ChatPlayer")
+    clock = pygame.time.Clock()
+
     player = Chat_player()
 
     while True:
+        clock.tick(30)
         screen.fill(BACK_COLOR)
 
-        chat_renders = player.draw(chats)
+        chat_renders = player.draw()
         if (not chat_renders == None) and (not chat_renders == []):
-            for chat_render in chat_renders:
-                screen.blit(chat_render["chat"], chat_render["pos"])
+            [screen.blit(chat_render["chat"], chat_render["pos"]) for chat_render in chat_renders]
 
         pygame.display.update()
-
+        
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 getter.quit()
                 sys.exit()
 
-def chat_get():
-    global chats
+def command_get():
+    global getter, player
     while True:
-        chats = getter.get_chats()
+        [player.command_process(c) for c in getter.get_chats()]
         time.sleep(1)
 
 executor = concurrent.futures.ThreadPoolExecutor(max_workers=2)
 executor.submit(main)
-executor.submit(chat_get)
+executor.submit(command_get)
