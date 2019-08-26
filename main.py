@@ -20,8 +20,12 @@ DISPLAY_SIZE = tuple(setting['win_size'])
 BACK_COLOR   = tuple(setting['back_color'])
 URL          = setting['chat_url']
 
-getter = Chat_getter(URL)
+print('complete loding json')
+
+getter = Chat_getter(URL, driver_path=setting['chromedriver_path'])
 player = None
+
+print('boot chrome_driver')
 
 def main():
     global player, getter

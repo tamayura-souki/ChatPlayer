@@ -8,7 +8,7 @@ import emoji
 from selenium import webdriver
 
 class Chat_getter:
-    def __init__(self, chat_url:str, not_chat=None):
+    def __init__(self, chat_url:str, not_chat=None, driver_path=None):
         if not_chat == None:
             self.not_chat_list = ['上位チャット', 'チャット', '詳細', 'チャットへようこそ！ご自身のプライバシーを守るとともに、YouTube のコミュニティ ガイドラインを遵守することを忘れないでください。',
                                     'メッセージを入力...', '0/200']
@@ -18,7 +18,10 @@ class Chat_getter:
         self.url        = chat_url
         options         = webdriver.ChromeOptions()
         options.add_argument('--headless')
-        self.driver     = webdriver.Chrome(options=options)
+        if driver_path == None:
+            self.driver = webdriver.Chrome(options=options)
+        else:
+            self.driver = webdriver.Chrome(executable_path=driver_path, options=options)
 
         self.sent_author_names  = []
         self.sent_messages      = []
