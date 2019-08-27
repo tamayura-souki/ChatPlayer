@@ -1,11 +1,16 @@
 {
     "plain_font_path" : "source/font/Koruri-Semibold.ttf",
 
-    "police_path"   : "source/sound/patrol-car1.wav",
-    "medic_path"    : "source/sound/ambulance-siren1.wav",
-    "laughter_path" : "source/sound/people_people-studio-laugh-normal1.wav",
+    "sound_commands" : [
+        {"command":"/w",      "volume" : 0.5, "path" : "source/sound/laugh.wav"},
+        {"command":"/police", "volume" : 0.5, "path" : "source/sound/police.wav"},
+        {"command":"/medic",  "volume" : 0.5, "path" : "source/sound/medic.wav"}
+    ],
 
-    "police_vol"   : 0.1,
-    "medic_vol"    : 0.3,
-    "laughter_vol" : 0.5
+    "color_commands" : [
+        {"command":"/red",   "font_color": [255,0,0], "outline_color": [255,255,255]},
+        {"command":"/blue",  "font_color": [0,0,255], "outline_color": [255,255,255]},
+        {"command":"/green", "font_color": [0,255,0], "outline_color": [30,30,30]},
+        {"command":"/bk",    "font_color": [0,0,0],   "outline_color": [255,255,255]}
+    ]
 }

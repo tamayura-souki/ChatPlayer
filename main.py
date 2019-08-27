@@ -13,19 +13,19 @@ from ChatPlayer import Chat_player
 
 import json
 
-setting = json.load(open('setting.json', 'r'))
+setting  = json.load(open("setting.json", 'r'))
 
+DISPLAY_SIZE = tuple(setting["win_size"])
+BACK_COLOR   = tuple(setting["back_color"])
+URL          = setting["chat_url"]
+GET_PERIOD   = setting["chat_get_period"]
 
-DISPLAY_SIZE = tuple(setting['win_size'])
-BACK_COLOR   = tuple(setting['back_color'])
-URL          = setting['chat_url']
+print("complete loding json")
 
-print('complete loding json')
-
-getter = Chat_getter(URL, driver_path=setting['chromedriver_path'])
+getter = Chat_getter(URL, driver_path=setting["chromedriver_path"])
 player = None
 
-print('boot chrome_driver')
+print("boot chrome_driver")
 
 def main():
     global player, getter
@@ -47,18 +47,20 @@ def main():
 
         pygame.display.update()
         
+        # 終了処理
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 getter.quit()
                 sys.exit()
 
+
 def command_get():
     global getter, player
     while True:
         [player.command_process(c) for c in getter.get_chats()]
-        time.sleep(1)
+        time.sleep(GET_PERIOD)
 
-executor = concurrent.futures.ThreadPoolExecutor(max_workers=2)
-executor.submit(main)
+executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
 executor.submit(command_get)
+main()
