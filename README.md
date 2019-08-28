@@ -5,12 +5,11 @@ youtubeチャットで遊ぶためのコード。チャットを取得して、�
 
 ## 実装済みのコマンド
 /police /medic サイレンを鳴らす
-
 /w 笑い声を鳴らす
 
 /red /blue /green /bk 文字色を変更する
-
 /fast /slow 文字の流れる速度を変える
+/-fast /-run /-slow 文字を逆から流す
 
 /unk チャンネル名非表示
 
