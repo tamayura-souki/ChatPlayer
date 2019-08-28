@@ -38,6 +38,18 @@ class Chat_player:
             except:
                 continue
 
+        # 文字速度コマンドの読み込み
+        self.speed_commands = []
+        for speed_command in setting["speed_commands"]:
+            try:
+                if len(speed_command["command"]) <= 0:
+                    continue
+
+                self.speed_commands.append({"command": speed_command["command"], "speed": float(speed_command["speed"])})
+
+            except:
+                continue
+
         # 文字色コマンドの読み込み
         self.font_color_commands = []
         for color_command in setting["color_commands"]:
@@ -92,17 +104,17 @@ class Chat_player:
         color = (255,255,255)
         outline_color = (30,30,30)
         # 横1280で 1 frame 4
-        speed = self.display_size[0] / 320
+        speed = self.display_size[0] / 270
 
         if '/unk' in command_request[1]:
             chat = command_request[1].split(' ')[-1]
 
-        if '/fast' in command_request[1]:
-            speed *= 2
-        
-        elif '/slow' in command_request[1]:
-            speed = speed /4 * 1.5
-        
+        # 速度系のコマンドを処理
+        for speed_command in self.speed_commands:
+            if speed_command["command"] in command_request[1]:
+                speed *= speed_command["speed"]
+                break
+
         # チャット色系のコマンドを処理
         for color_command in self.font_color_commands:
             if color_command["command"] in command_request[1]:
@@ -145,15 +157,18 @@ class Niconico(command):
         self.font_type  = font_type
         self.line       = line
         self.speed      = speed
-        self.pos        = [display_size[0]-speed, display_size[1]*line/line_max]
         self.display_size = display_size
         self.color      = color
         self.outline_color = outline_color
         self.render     = pygu.textOutline(self.font_type, self.comment, self.color, self.outline_color, outline_width=1, back_color=back_color).convert()
 
+        self.pos        = [display_size[0]-speed if speed > 0 else -self.render.get_width(),
+                            display_size[1]*line/line_max]
+
     def draw(self):
-        self.pos[0] = self.pos[0] - self.speed
-        if self.pos[0] + self.font_type.size(self.comment)[0] <= 0:
+        self.pos[0] -= self.speed
+        if self.pos[0] + self.render.get_width() < 0 \
+            or self.pos[0] > self.display_size[0]:
             return None
         return [self.render, tuple(self.pos)]
 

@@ -21,8 +21,12 @@ URL          = setting["chat_url"]
 GET_PERIOD   = setting["chat_get_period"]
 
 print("complete loding json")
-
-getter = Chat_getter(URL, driver_path=setting["chromedriver_path"])
+try:
+    getter = Chat_getter(URL, driver_path=setting["chromedriver_path"])
+except:
+    getter.quit()
+    sys.exit()
+    
 player = None
 
 print("boot chrome_driver")
@@ -35,9 +39,15 @@ def main():
     pygame.display.set_caption("ChatPlayer")
     clock = pygame.time.Clock()
 
-    player = Chat_player(DISPLAY_SIZE)
+    try:
+        player = Chat_player(DISPLAY_SIZE)
 
-    while True:
+    except:
+        pygame.quit()
+        getter.quit()
+        sys.exit()
+
+    def loop():
         clock.tick(30)
         screen.fill(BACK_COLOR)
 
@@ -54,6 +64,15 @@ def main():
                 getter.quit()
                 sys.exit()
 
+    try:
+        while True:
+            loop()
+
+    except:
+        pygame.quit()
+        getter.quit()
+        sys.exit()
+
 
 def command_get():
     global getter, player
@@ -63,4 +82,10 @@ def command_get():
 
 executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
 executor.submit(command_get)
-main()
+
+try:
+    main()
+
+except:
+    getter.quit()
+    sys.exit()

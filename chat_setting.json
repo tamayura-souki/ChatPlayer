@@ -7,6 +7,14 @@
         {"command":"/medic",  "volume" : 0.5, "path" : "source/sound/medic.wav"}
     ],
 
+    "speed_commands" : [
+        {"command":"/fast",  "speed": 2.0},
+        {"command":"/slow",  "speed": 0.375},
+        {"command":"/-fast", "speed": -2.0},
+        {"command":"/-run",  "speed": -1},
+        {"command":"/-slow", "speed": -0.375}
+    ],
+
     "color_commands" : [
         {"command":"/red",   "font_color": [255,0,0], "outline_color": [255,255,255]},
         {"command":"/blue",  "font_color": [0,0,255], "outline_color": [255,255,255]},
