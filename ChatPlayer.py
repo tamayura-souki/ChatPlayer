@@ -6,6 +6,7 @@ import pygame
 from pygame.locals import *
 
 import pygame_utilities as pygu
+from SuperChat import SuperChatAir
 
 import json
 
@@ -22,6 +23,8 @@ class Chat_player:
         self.niconico_line_max = 12
         self.plain_font_size = int(self.display_size[1] / self.niconico_line_max  *2/3)
         self.plain_font = pygame.font.Font(setting["plain_font_path"], self.plain_font_size)
+
+        self.SuperChat = SuperChatAir()
 
         # 音声系のコマンドの読み込み
         self.sound_commands = []
@@ -106,9 +109,17 @@ class Chat_player:
         # 横1280で 1 frame 4
         speed = self.display_size[0] / 270
 
+        # チャンネル名非表示
         if '/unk' in command_request[1]:
             chat = command_request[1].split(' ')[-1]
 
+        # エアスパチャ
+        
+        if '/superchat' in command_request[1] or '/sc' in command_request[1]:
+            superchat = command_request[1].split(' ')
+            if len(superchat) > 1:
+                return self.SuperChat.super_chat(command_request[0], superchat[-1], superchat[-2] if len(superchat) > 2 else "")
+        
         # 速度系のコマンドを処理
         for speed_command in self.speed_commands:
             if speed_command["command"] in command_request[1]:

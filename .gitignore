@@ -5,3 +5,5 @@ build/
 dist/
 main.spec
 not dist source/
+.env
+tokens.json
