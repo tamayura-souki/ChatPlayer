@@ -5,15 +5,19 @@
 import pygame
 from pygame.locals import *
 
+<<<<<<< Updated upstream
 import pygame_utilities as pygu
+=======
+from SuperChat import SuperChatAir
+from ChatCommands import *
+>>>>>>> Stashed changes
 
 import json
 
 class Chat_player:
     def __init__(self, display_size):
         # display_size [横, 縦]
-
-        setting = json.load(open("chat_setting.json", 'r'))
+        setting = json.load(open("chat_setting.json", 'r', encoding='utf-8', errors='ignore'))
 
         self.display_size = display_size
 
@@ -45,7 +49,7 @@ class Chat_player:
                 if len(speed_command["command"]) <= 0:
                     continue
 
-                self.speed_commands.append({"command": speed_command["command"], "speed": float(speed_command["speed"])})
+                self.speed_commands.append(speed_command)
 
             except:
                 continue
@@ -74,8 +78,28 @@ class Chat_player:
                 
             except:
                 continue
+        
+        # 文字降らしコマンドの読み込み
+        self.rain_commands = []
+        for rain_command in setting["rain_commands"]:
+            try:
+                if len(rain_command["command"]) <= 0:
+                    continue
 
+                for i in range(3):
+                    if rain_command["color"][i] < 0 \
+                        or rain_command["color"][i] > 255:
+                        raise ValueError
 
+                self.rain_commands.append(rain_command)
+
+            except ValueError:
+                print("fail rain format")
+                continue
+
+            except:
+                continue
+        
         self.pre_commands = []
 
     
@@ -86,20 +110,35 @@ class Chat_player:
         chat_renders        = [c.draw() for c in self.command_list]
         # draw() の返り値が Noneのやつを消したい
         self.command_list   = [c for c, r in zip(self.command_list, chat_renders) if not r == None]
-        chat_renders        = [{"chat":c[0], "pos":c[1]} for c in chat_renders if not c == None]
+        chat_renders        = [r for r in chat_renders if not r == None]
+        chat_renders        = [{"chat":c[0], "pos":c[1]} for chats in chat_renders
+                                    for c in chats if not c == None]
 
         return chat_renders
 
 
     def command_process(self, command_request):
         # コマンドを処理する
-
         # 音声系コマンドを処理
         for sound_command in self.sound_commands:
             if sound_command["command"] in command_request[1]:
                 sound_command["Sound"].stop()
                 return sound_command["Sound"].play()
-
+        
+        for rain_command in self.rain_commands:
+            if rain_command["command"] in command_request[1]:
+                return self.command_list.append(
+                    Rain(
+                        rain_command["drops"],
+                        self.plain_font,
+                        rain_command["time"],
+                        v=rain_command["v0"],
+                        accel=rain_command["accel"],
+                        color=tuple(rain_command["color"]),
+                        display_size=self.display_size
+                    )
+                )
+        
         chat  = command_request[0] + ' : ' + command_request[1].split(' ')[-1]
         color = (255,255,255)
         outline_color = (30,30,30)
@@ -109,6 +148,15 @@ class Chat_player:
         if '/unk' in command_request[1]:
             chat = command_request[1].split(' ')[-1]
 
+<<<<<<< Updated upstream
+=======
+        # エアスパチャ
+        if '/superchat' in command_request[1] or '/sc' in command_request[1]:
+            superchat = command_request[1].split(' ')
+            if len(superchat) > 1:
+                return self.SuperChat.super_chat(command_request[0], superchat[-1], superchat[-2] if len(superchat) > 2 else "")
+        
+>>>>>>> Stashed changes
         # 速度系のコマンドを処理
         for speed_command in self.speed_commands:
             if speed_command["command"] in command_request[1]:
@@ -130,50 +178,10 @@ class Chat_player:
                     speed = speed,
                     color = color,
                     outline_color = outline_color,
-                    display_size=self.display_size,
-                    line_max=self.niconico_line_max
+                    display_size = self.display_size,
+                    line_max = self.niconico_line_max
                 )
             )
         self.niconico_line += 1
         if self.niconico_line >= self.niconico_line_max:
             self.niconico_line = 0
-
-
-
-class command:
-    # コマンドを処理するクラスの雛形
-    def __init__(self):
-        pass
-    def draw(self):
-        # 毎回呼び出される関数
-        return None
-
-class Niconico(command):
-    # 画面を16行にわる
-    def __init__(self, comment:str, font_type, line:int, speed=4, color=(255,255,255), outline_color = (30,30,30),
-                 display_size=(1920,1080), line_max=16, back_color=(0,255,0)):
-        super(Niconico, self).__init__()
-        self.comment    = comment
-        self.font_type  = font_type
-        self.line       = line
-        self.speed      = speed
-        self.display_size = display_size
-        self.color      = color
-        self.outline_color = outline_color
-        self.render     = pygu.textOutline(self.font_type, self.comment, self.color, self.outline_color, outline_width=1, back_color=back_color).convert()
-
-        self.pos        = [display_size[0]-speed if speed > 0 else -self.render.get_width(),
-                            display_size[1]*line/line_max]
-
-    def draw(self):
-        self.pos[0] -= self.speed
-        if self.pos[0] + self.render.get_width() < 0 \
-            or self.pos[0] > self.display_size[0]:
-            return None
-        return [self.render, tuple(self.pos)]
-
-    def line(self):
-        return line
-
-    def pos(self):
-        return tuple(self.pos)
