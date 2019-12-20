@@ -1,7 +1,5 @@
 {
-    "chat_url"          : "https://www.youtube.com/live_chat?v=Sflq-_arjDg&is_popout=1",
+    "chat_id"          : "Dx1r1n7Oo5A",
     "win_size"          : [1280, 720],
-    "back_color"        : [0,255,0],
-    "chat_get_period"   : 1,
-    "chromedriver_path" : "source/chromedriver.exe"
+    "back_color"        : [0,255,0]
 }

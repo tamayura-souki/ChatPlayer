@@ -8,3 +8,4 @@ not dist source/
 .env
 tokens.json
 *.log
+test.py
