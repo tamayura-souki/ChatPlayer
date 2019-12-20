@@ -5,12 +5,7 @@
 import pygame
 from pygame.locals import *
 
-<<<<<<< Updated upstream
-import pygame_utilities as pygu
-=======
-from SuperChat import SuperChatAir
 from ChatCommands import *
->>>>>>> Stashed changes
 
 import json
 
@@ -148,15 +143,6 @@ class Chat_player:
         if '/unk' in command_request[1]:
             chat = command_request[1].split(' ')[-1]
 
-<<<<<<< Updated upstream
-=======
-        # エアスパチャ
-        if '/superchat' in command_request[1] or '/sc' in command_request[1]:
-            superchat = command_request[1].split(' ')
-            if len(superchat) > 1:
-                return self.SuperChat.super_chat(command_request[0], superchat[-1], superchat[-2] if len(superchat) > 2 else "")
-        
->>>>>>> Stashed changes
         # 速度系のコマンドを処理
         for speed_command in self.speed_commands:
             if speed_command["command"] in command_request[1]:
