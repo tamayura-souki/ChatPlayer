@@ -12,6 +12,8 @@ from ChatGetter import Chat_getter
 from ChatPlayer import Chat_player
 
 import json
+import logging
+import traceback
 
 setting  = json.load(open("setting.json", 'r'))
 
@@ -43,6 +45,7 @@ def main():
         player = Chat_player(DISPLAY_SIZE)
 
     except:
+        print("Error ChatPlayer")
         pygame.quit()
         getter.quit()
         sys.exit()
@@ -69,6 +72,7 @@ def main():
             loop()
 
     except:
+        traceback.print_exc()
         pygame.quit()
         getter.quit()
         sys.exit()
@@ -80,11 +84,10 @@ def command_get():
         [player.command_process(c) for c in getter.get_chats()]
         time.sleep(GET_PERIOD)
 
-executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
-executor.submit(command_get)
-
+executor = concurrent.futures.ThreadPoolExecutor(max_workers=2)
 try:
-    main()
+    executor.submit(command_get)
+    executor.submit(main)
 
 except:
     getter.quit()

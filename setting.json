@@ -1,5 +1,5 @@
 {
-    "chat_url"          : "https://www.youtube.com/live_chat?is_popout=1&v=Sflq-_arjDg",
+    "chat_url"          : "https://www.youtube.com/live_chat?v=Sflq-_arjDg&is_popout=1",
     "win_size"          : [1280, 720],
     "back_color"        : [0,255,0],
     "chat_get_period"   : 1,

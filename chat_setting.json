@@ -4,7 +4,8 @@
     "sound_commands" : [
         {"command":"/w",      "volume" : 0.5, "path" : "source/sound/laugh.wav"},
         {"command":"/police", "volume" : 0.5, "path" : "source/sound/police.wav"},
-        {"command":"/medic",  "volume" : 0.5, "path" : "source/sound/medic.wav"}
+        {"command":"/medic",  "volume" : 0.5, "path" : "source/sound/medic.wav"},
+        {"command":"/tot",    "volume" : 0.7, "path" : "source/sound/tot.wav"}
     ],
 
     "speed_commands" : [
@@ -20,5 +21,10 @@
         {"command":"/blue",  "font_color": [0,0,255], "outline_color": [255,255,255]},
         {"command":"/green", "font_color": [0,255,0], "outline_color": [30,30,30]},
         {"command":"/bk",    "font_color": [0,0,0],   "outline_color": [255,255,255]}
+    ],
+
+    "rain_commands" : [
+        {"command":"/snow", "time":5, "v0":8, "accel":-0.01, "drops": "*＊`○◎●゜☆", "color": [255,255,255]},
+        {"command":"/blood", "time":5, "v0":0, "accel":0.05, "drops":"●", "color":[120, 0, 0]}
     ]
 }

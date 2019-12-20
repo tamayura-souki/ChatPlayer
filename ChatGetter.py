@@ -9,7 +9,6 @@ from selenium import webdriver
 
 class Chat_getter:
     def __init__(self, chat_url:str, driver_path=None):
-
         self.url        = chat_url
         options         = webdriver.ChromeOptions()
         options.add_argument('--headless')
@@ -17,7 +16,6 @@ class Chat_getter:
             self.driver = webdriver.Chrome(options=options)
         else:
             self.driver = webdriver.Chrome(executable_path=driver_path, options=options)
-
         self.sent_author_names  = []
         self.sent_messages      = []
 
