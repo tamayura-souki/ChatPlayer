@@ -18,7 +18,7 @@ from ChatPlayer import Chat_player
 class ChatPlayerApp():
     def __init__(self, json_file):
         self.json_file = json_file
-        self.setting   = json.load(open(json_file, 'r'))
+        self.setting   = json.load(open(json_file, 'r', encoding='utf-8', errors='ignore'))
 
         self.make_livechat()
 
@@ -62,7 +62,7 @@ class ChatPlayerApp():
             self.setting_window()
             self.getter = LiveChat(self.setting["chat_id"], callback = self.command_get)
 
-            with open(self.json_file, "w") as f:
+            with open(self.json_file, "w", encoding='utf-8', errors='ignore') as f:
                 json.dump(self.setting, f)
 
         except:
