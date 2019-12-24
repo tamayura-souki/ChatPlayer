@@ -4,19 +4,26 @@ youtubeチャットで遊ぶためのコード。チャットを取得して、�
 デフォルトでコメントがウインドウ上に右から左に流れるようになっている。
 
 ## 実装済みのコマンド
-/police /medic サイレンを鳴らす
-/w 笑い声を鳴らす
+/police /medic サイレンを鳴らす\
+/w 笑い声を鳴らす\
+/tot トリックオアトリート
 
 /red /blue /green /bk 文字色を変更する
-/fast /slow 文字の流れる速度を変える
+
+/fast /slow 文字の流れる速度を変える \
 /-fast /-run /-slow 文字を逆から流す
+
+/snow 雪を降らす \
+/rain 雨を降らす \
+/blood 血が降る \
+/pray 十字架が降りてきて登っていく \
+/ray 光が降る
 
 /unk チャンネル名非表示
 
 # Requirements
-- selenium(chrome)
+- pychat(https://github.com/taizan-hokuto/pytchat)
 - pygame
-- emoji(emoji削除用)
 
 # License
-Please see LICENSE file.
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
