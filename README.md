@@ -33,7 +33,7 @@ YouTubeLive のチャットで遊ぶためのコード。チャットを取得�
 - chat_setting.json
 	- "plain_font_path" でデフォルトで使用するフォントファイルを指定できます。
 		
-	- "sound_commands" で音声系のコマンドの設定が出来ます。
+	- "sound_commands" で音声系のコマンドの設定が出来ます。\
 	    新規に増やすことも出来ます。\
 	    ※pygame(使用しているライブラリ)の仕様上、wavとoggのみロード出来ます。
 		
