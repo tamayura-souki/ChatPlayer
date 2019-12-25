@@ -9,6 +9,7 @@ import json
 
 import tkinter as tk
 
+import emoji
 import pygame
 from pygame.locals import *
 
@@ -21,13 +22,21 @@ class ChatPlayerApp():
         self.setting   = json.load(open(json_file, 'r', encoding='utf-8', errors='ignore'))
 
         self.make_livechat()
-
         self.end_f     = False
 
     # callback func
     def command_get(self, data):
         for c in data.items:
-            self.player.command_process([c.author.name, c.message])
+            name = c.author.name
+            message = c.message
+            # 絵文字消す
+            name = ''.join(c for c in name if not c in emoji.UNICODE_EMOJI)
+            message = ''.join(c for c in message if not c in emoji.UNICODE_EMOJI)
+            
+            if len(message) < 1:
+                continue
+
+            self.player.command_process([name, message])
             data.tick()
 
     def setting_window(self):

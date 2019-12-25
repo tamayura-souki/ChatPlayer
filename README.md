@@ -51,6 +51,7 @@ YouTubeLive のチャットで遊ぶためのコード。チャットを取得�
 # Requirements
 - pychat(https://github.com/taizan-hokuto/pytchat)
 - pygame
+- emoji
 
 # License
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
