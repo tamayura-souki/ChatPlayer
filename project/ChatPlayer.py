@@ -118,10 +118,12 @@ class Chat_player:
         for sound_command in self.sound_commands:
             if sound_command["command"] in command_request[1]:
                 sound_command["Sound"].stop()
+                command_request[1] = command_request[1].replace(sound_command["command"], "")
                 return sound_command["Sound"].play()
         
         for rain_command in self.rain_commands:
             if rain_command["command"] in command_request[1]:
+                command_request[1] = command_request[1].replace(rain_command["command"], "")
                 return self.command_list.append(
                     Rain(
                         rain_command["drops"],
@@ -134,19 +136,16 @@ class Chat_player:
                     )
                 )
         
-        chat  = command_request[0] + ' : ' + command_request[1].split(' ')[-1]
         color = (255,255,255)
         outline_color = (30,30,30)
         # 横1280で 1 frame 4
         speed = self.display_size[0] / 270
 
-        if '/unk' in command_request[1]:
-            chat = command_request[1].split(' ')[-1]
-
         # 速度系のコマンドを処理
         for speed_command in self.speed_commands:
             if speed_command["command"] in command_request[1]:
                 speed *= speed_command["speed"]
+                command_request[1] = command_request[1].replace(speed_command["command"], "")
                 break
 
         # チャット色系のコマンドを処理
@@ -154,7 +153,13 @@ class Chat_player:
             if color_command["command"] in command_request[1]:
                 color           = tuple(color_command["font_color"])
                 outline_color   = tuple(color_command["outline_color"])
+                command_request[1] = command_request[1].replace(color_command["command"], "")
                 break
+
+        chat  = command_request[0] + ' : ' + command_request[1]
+
+        if '/unk' in command_request[1]:
+            chat = command_request[1].replace("/unk", "")
 
         self.command_list.append(
                 Niconico(
