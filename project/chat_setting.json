@@ -1,4 +1,7 @@
 {
+    "taboo_words" : [],
+    "oo_words" : [],
+
     "plain_font_path" : "source/font/Koruri-Semibold.ttf",
 
     "sound_commands" : [

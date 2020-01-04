@@ -22,6 +22,10 @@ class Chat_player:
         self.plain_font_size = int(self.display_size[1] / self.niconico_line_max  *2/3)
         self.plain_font = pygame.font.Font(setting["plain_font_path"], self.plain_font_size)
 
+        # ng word 系の読み込み
+        self.taboo_words = setting["taboo_words"]
+        self.oo_words = setting["oo_words"]
+
         # 音声系のコマンドの読み込み
         self.sound_commands = []
         for sound_command in setting["sound_commands"]:
@@ -160,6 +164,15 @@ class Chat_player:
 
         if '/unk' in command_request[1]:
             chat = command_request[1].replace("/unk", "")
+
+        # taboo_word を含んだ※を許すな
+        for taboo in self.taboo_words:
+            if taboo in chat:
+                return False
+
+        # oo_word は伏せる
+        for oo in self.oo_words:
+            chat = chat.replace(oo, "〇〇")
 
         self.command_list.append(
                 Niconico(
