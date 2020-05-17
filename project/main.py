@@ -32,7 +32,7 @@ class ChatPlayerApp():
             # 絵文字消す
             name = ''.join(c for c in name if not c in emoji.UNICODE_EMOJI)
             message = ''.join(c for c in message if not c in emoji.UNICODE_EMOJI)
-            
+
             if len(message) < 1:
                 continue
 
