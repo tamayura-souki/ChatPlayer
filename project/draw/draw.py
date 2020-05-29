@@ -1,13 +1,8 @@
-# ここに描画 周りのコード全部突っ込む
-import sys
-import os
 from abc import ABCMeta, abstractmethod
 
 from typing import Tuple
 
-sys.path.append(os.pardir)
-from config import logger
-
+from . import logger
 class Render(metaclass=ABCMeta):
     """
     draw window で描画するオブジェクト

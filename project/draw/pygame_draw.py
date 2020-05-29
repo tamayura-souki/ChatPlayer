@@ -1,13 +1,11 @@
 import sys
-import os
 import traceback
 from typing import Tuple
 
 import pygame
 from pygame.locals import *
 
-sys.path.append(os.pardir)
-from config import logger
+from . import logger
 from .draw import Render, DrawWindow
 from .pygame_utilities import textOutline
 
@@ -16,32 +14,60 @@ def get_quit_event():
 
 class PygameStrRender(Render):
     screen = None
+    screen_size = (0,0)
     font = None
+    back_color = (0,255,0)
 
     @classmethod
     def set_screen(cls, screen:pygame.Surface):
         cls.screen = screen
+        cls.screen_size = cls.screen.get_size()
 
     @classmethod
     def set_font(cls, font_name:str, font_size:int):
         cls.font = pygame.font.SysFont(font_name, font_size)
 
-    def __init__(self):
-        self.pos = (255,255)
-        self.render = textOutline(
-            PygameStrRender.font,
-            "testテキストです☆",
-            (255,255,255),
-            (0,0,0)
-        )
+    def __init__(self,
+        text:str,
+        color = (255,255,255),
+        outline_color = (0,0,0),
+        font=None
+    ):
 
-        self.size = (0,0)
+        font = PygameStrRender.font if font is None else font
+
+        self.pos = [0,0]
+        self.v   = [0,0]
+        self.a   = [0,0]
+        self.render = textOutline(
+            font,
+            text,
+            color,
+            outline_color,
+            back_color=PygameStrRender.back_color
+        ).convert()
+
+        self.size = self.render.get_size()
 
     def is_draw(self):
         # 画面内外判定
+        judge = (
+            self.pos[0] > PygameStrRender.screen_size[0],
+            self.pos[0] < -self.size[0],
+            self.pos[1] > PygameStrRender.screen_size[0],
+            self.pos[1] < -self.size[0]
+        )
+        if any(judge):
+            return False
+
         return True
 
     def draw(self):
+        self.pos[0] += self.v[0]
+        self.pos[1] += self.v[1]
+        self.v[0] += self.a[0]
+        self.v[1] += self.a[1]
+
         if not self.is_draw():
             return None
 

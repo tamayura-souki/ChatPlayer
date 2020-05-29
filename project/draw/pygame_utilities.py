@@ -4,8 +4,11 @@
 import pygame, pygame.font, pygame.image
 from pygame.locals import *
 
+# outline_width を 1以上にすると いけない
+# CSS の 太文字作成を参考に改良すること
+
 def textHollow(font, message, fontcolor, outline_width=1):
-    notcolor = (0,255,0) # [c^0xFF for c in fontcolor]
+    notcolor = [c^0xFF for c in fontcolor]
     base = font.render(message, False, fontcolor, notcolor)
     size = base.get_width() + outline_width*2, base.get_height() + outline_width*2
     img = pygame.Surface(size, 16)
