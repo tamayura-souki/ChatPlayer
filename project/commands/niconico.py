@@ -1,5 +1,5 @@
 from . import logger
-from . import PygameStrRender, PygameWindow
+from . import PygameStrRender
 
 from .command import Command
 from .command_util import *
@@ -47,7 +47,7 @@ class NicoNico(Command):
                     logger.warning(f"{command} cannot have speed 0")
                     raise Exception
 
-                self.speed_commands[command]
+                self.speed_commands[command] = speed
 
             except:
                 logger.warning("loading skip a speed command")
@@ -105,12 +105,13 @@ class NicoNico(Command):
         render = PygameStrRender(
             name+text,
             color=color,
-            outline_color=outline_color
+            outline_color=outline_color,
+            pos = [
+                self.screen_size[0],
+                self.screen_size[1] / self.line_n * self.now_line
+            ],
+            v = [ -speed, 0 ]
         )
-
-        render.v[0] = -speed
-        render.pos[0] = self.screen_size[0]
-        render.pos[1] = self.screen_size[1] / self.line_n * self.now_line
 
         self.now_line += 1
         if self.now_line >= self.line_n:
