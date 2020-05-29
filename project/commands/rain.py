@@ -47,7 +47,8 @@ class Rain(Command):
 
         def get_render():
             r   = rnd.choice(values[4])
-            pos = [float(rnd.randrange(0,self.screen_size[0])), float(-r.get_height())]
+            pos = [ float(rnd.randrange(0,self.screen_size[0])),
+                    float(-r.get_height())]
             return PygameStrRender(
                 render = r,
                 pos    = pos,
