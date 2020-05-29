@@ -4,6 +4,7 @@ from typing import Tuple
 
 import pygame
 from pygame.locals import *
+from pygame.time   import get_ticks
 
 from . import logger
 from .draw import Render, DrawWindow
@@ -28,17 +29,28 @@ class PygameStrRender(Render):
         cls.font = pygame.font.SysFont(font_name, font_size)
 
     def __init__(self,
-        text:str,
+        text:str=None,
         color = (255,255,255),
         outline_color = (0,0,0),
-        font=None
+        font=None,
+        render=None,
+
+        pos = [0.0,0.0],
+        v   = [0.0,0.0],
+        a   = [0.0,0.0]
     ):
+
+        self.pos = pos
+        self.v   = v
+        self.a   = a
+
+        if render is not None:
+            self.render = render
+            self.size = self.render.get_size()
+            return
 
         font = PygameStrRender.font if font is None else font
 
-        self.pos = [0,0]
-        self.v   = [0,0]
-        self.a   = [0,0]
         self.render = textOutline(
             font,
             text,
@@ -54,8 +66,8 @@ class PygameStrRender(Render):
         judge = (
             self.pos[0] > PygameStrRender.screen_size[0],
             self.pos[0] < -self.size[0],
-            self.pos[1] > PygameStrRender.screen_size[0],
-            self.pos[1] < -self.size[0]
+            self.pos[1] > PygameStrRender.screen_size[1],
+            self.pos[1] < -self.size[1]
         )
         if any(judge):
             return False
@@ -81,6 +93,27 @@ class PygameSoundRender(Render):
     def draw(self):
         self.sound
         return None
+
+class GroupRender(Render):
+    def __init__(self, interval, renders):
+        self.interval = interval
+        self.n_renders = renders
+        self.renders  = []
+        self.old_time = get_ticks()
+
+        self.renders.append(self.n_renders.pop(0))
+
+    def draw(self):
+        if get_ticks() - self.old_time > self.interval:
+            if self.n_renders:
+                self.renders.append(self.n_renders.pop(0))
+                self.old_time = get_ticks()
+
+        self.renders = [r for r in self.renders if r.draw() is not None]
+
+        if not len(self.renders):
+            return None
+        return True
 
 class PygameWindow(DrawWindow):
     """
