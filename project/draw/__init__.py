@@ -6,4 +6,8 @@ except:
     from config import logger
 
 from .draw import Render
-from .pygame_draw import get_quit_event, PygameStrRender, GroupRender, PygameWindow
+from .pygame_draw import (
+    get_quit_event,
+    PygameStrRender, PygameSoundRender, GroupRender,
+    PygameWindow
+)

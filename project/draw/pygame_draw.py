@@ -87,11 +87,13 @@ class PygameStrRender(Render):
         return True
 
 class PygameSoundRender(Render):
-    def __init__(self):
-        pass
+    def __init__(self, path, volume):
+        self.sound = pygame.mixer.Sound(path)
+        self.sound.set_volume(volume)
 
     def draw(self):
-        self.sound
+        self.sound.stop()
+        self.sound.play()
         return None
 
 class GroupRender(Render):
