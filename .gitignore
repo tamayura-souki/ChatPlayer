@@ -9,4 +9,3 @@ not dist source/
 tokens.json
 *.log
 test.py
-*hoge*
