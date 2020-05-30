@@ -1,191 +1,65 @@
-# -*- coding: utf-8 -*-
+import emoji
 
-# Chat_player クラス
+from config import logger
+from utils import load_json
+from draw import PygameStrRender, PygameWindow
+from commands import NicoNico, Rain, Sound
 
-import pygame
-from pygame.locals import *
+class ChatPlayer:
+    def __init__(self, pg_window:PygameWindow, config_path:str):
+        self.pg_window = pg_window
 
-from ChatCommands import *
+        try:
+            config = load_json(config_path)
 
-import json
+            self.taboo_words = [str(c) for c in config["taboo_words"]]
+            self.oo_words = [str(c) for c in config["oo_words"]]
 
-class Chat_player:
-    def __init__(self, display_size):
-        # display_size [横, 縦]
-        setting = json.load(open("chat_setting.json", 'r', encoding='utf-8', errors='ignore'))
+            # コマンド系
+            font_name = str(config["font"]["name"])
+            font_size = int(config["font"]["size"])
 
-        self.display_size = display_size
+            PygameStrRender.set_font(font_name, font_size)
+            PygameStrRender.set_screen(self.pg_window.screen)
 
-        self.command_list = []
-        self.niconico_line = 0
-        self.niconico_line_max = 12
-        self.plain_font_size = int(self.display_size[1] / self.niconico_line_max  *2/3)
-        self.plain_font = pygame.font.Font(setting["plain_font_path"], self.plain_font_size)
+            nn = NicoNico(
+                PygameStrRender.screen_size, **config["niconico_commands"]
+            )
+            rain = Rain(
+                PygameStrRender.screen_size, config["rain_commands"]
+            )
+            sound = Sound(
+                config["sound_commands"]
+            )
+            self.commands = [sound, rain, nn]
 
-        # ng word 系の読み込み
-        self.taboo_words = setting["taboo_words"]
-        self.oo_words = setting["oo_words"]
-
-        # 音声系のコマンドの読み込み
-        self.sound_commands = []
-        for sound_command in setting["sound_commands"]:
-            try:
-                command = sound_command["command"]
-                if len(command) <= 0:
-                    continue
-
-                Sound = pygame.mixer.Sound(sound_command["path"])
-                Sound.set_volume(sound_command["volume"])
-
-                self.sound_commands.append({"command": command, "Sound": Sound})
-            except:
-                continue
-
-        # 文字速度コマンドの読み込み
-        self.speed_commands = []
-        for speed_command in setting["speed_commands"]:
-            try:
-                if len(speed_command["command"]) <= 0:
-                    continue
-
-                self.speed_commands.append(speed_command)
-
-            except:
-                continue
-
-        # 文字色コマンドの読み込み
-        self.font_color_commands = []
-        for color_command in setting["color_commands"]:
-            try:
-                if len(color_command["command"]) <= 0:
-                    continue
-
-                for i in range(3):
-                    if color_command["font_color"][i] < 0 \
-                            or color_command["font_color"][i] > 255:
-                        raise ValueError
-                    
-                    if color_command["outline_color"][i] < 0 \
-                            or color_command["outline_color"][i] > 255:
-                        raise ValueError
-
-                self.font_color_commands.append(color_command)
-
-            except ValueError:
-                print("fail color format")
-                continue
-                
-            except:
-                continue
-        
-        # 文字降らしコマンドの読み込み
-        self.rain_commands = []
-        for rain_command in setting["rain_commands"]:
-            try:
-                if len(rain_command["command"]) <= 0:
-                    continue
-
-                for i in range(3):
-                    if rain_command["color"][i] < 0 \
-                        or rain_command["color"][i] > 255:
-                        raise ValueError
-
-                self.rain_commands.append(rain_command)
-
-            except ValueError:
-                print("fail rain format")
-                continue
-
-            except:
-                continue
-        
-        self.pre_commands = []
-
-    
-    def draw(self):
-        if len(self.command_list) == 0:
+        except:
+            logger.error("failed at loading chat config")
             return None
 
-        chat_renders        = [c.draw() for c in self.command_list]
-        # draw() の返り値が Noneのやつを消したい
-        self.command_list   = [c for c, r in zip(self.command_list, chat_renders) if not r == None]
-        chat_renders        = [r for r in chat_renders if not r == None]
-        chat_renders        = [{"chat":c[0], "pos":c[1]} for chats in chat_renders
-                                    for c in chats if not c == None]
+    def process_comment(self, comment:[str,str]):
 
-        return chat_renders
+        comment[0] = ''.join(c for c in comment[0] if not c in emoji.UNICODE_EMOJI)
+        comment[1] = ''.join(c for c in comment[1] if not c in emoji.UNICODE_EMOJI)
 
+        if not comment[1]:
+            return False
 
-    def command_process(self, command_request):
-        # コマンドを処理する
-        # 音声系コマンドを処理
-        for sound_command in self.sound_commands:
-            if sound_command["command"] in command_request[1]:
-                sound_command["Sound"].stop()
-                command_request[1] = command_request[1].replace(sound_command["command"], "")
-                return sound_command["Sound"].play()
-        
-        for rain_command in self.rain_commands:
-            if rain_command["command"] in command_request[1]:
-                command_request[1] = command_request[1].replace(rain_command["command"], "")
-                return self.command_list.append(
-                    Rain(
-                        rain_command["drops"],
-                        self.plain_font,
-                        rain_command["time"],
-                        v=rain_command["v0"],
-                        accel=rain_command["accel"],
-                        color=tuple(rain_command["color"]),
-                        display_size=self.display_size
-                    )
-                )
-        
-        color = (255,255,255)
-        outline_color = (30,30,30)
-        # 横1280で 1 frame 4
-        speed = self.display_size[0] / 270
-
-        # 速度系のコマンドを処理
-        for speed_command in self.speed_commands:
-            if speed_command["command"] in command_request[1]:
-                speed *= speed_command["speed"]
-                command_request[1] = command_request[1].replace(speed_command["command"], "")
-                break
-
-        # チャット色系のコマンドを処理
-        for color_command in self.font_color_commands:
-            if color_command["command"] in command_request[1]:
-                color           = tuple(color_command["font_color"])
-                outline_color   = tuple(color_command["outline_color"])
-                command_request[1] = command_request[1].replace(color_command["command"], "")
-                break
-
-        chat  = command_request[0] + ' : ' + command_request[1]
-
-        if '/unk' in command_request[1]:
-            chat = command_request[1].replace("/unk", "")
-
-        # taboo_word を含んだ※を許すな
+        # taboo_word を含んだコメントを許すな
         for taboo in self.taboo_words:
-            if taboo in chat:
+            if taboo in comment[0] or taboo in comment[1]:
                 return False
 
         # oo_word は伏せる
         for oo in self.oo_words:
-            chat = chat.replace(oo, "〇〇")
+            comment[0] = comment[0].replace(oo, "〇〇")
+            comment[1] = comment[1].replace(oo, "〇〇")
 
-        self.command_list.append(
-                Niconico(
-                    chat,
-                    self.plain_font,
-                    self.niconico_line,
-                    speed = speed,
-                    color = color,
-                    outline_color = outline_color,
-                    display_size = self.display_size,
-                    line_max = self.niconico_line_max
-                )
-            )
-        self.niconico_line += 1
-        if self.niconico_line >= self.niconico_line_max:
-            self.niconico_line = 0
+
+        for command in self.commands:
+            render = command.process_comment(comment)
+            if render is not None:
+                self.pg_window.add_render(render)
+                return True
+
+        return False
