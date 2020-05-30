@@ -2,6 +2,11 @@
     "taboo_words" : [],
     "oo_words" : [],
 
+    "font" : {
+        "name" : "yugothicregularyugothicuisemilight",
+        "size" : 50
+    },
+
     "sound_commands" : [
         {"command":"/w",      "volume" : 0.5, "path" : "source/sound/laugh.wav"},
         {"command":"/police", "volume" : 0.5, "path" : "source/sound/police.wav"},
