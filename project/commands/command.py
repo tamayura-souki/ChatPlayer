@@ -7,6 +7,6 @@ class Command(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def process_comment(self, text:[str,str]) -> Render:
+    def process_comment(self, comment:[str,str]) -> Render:
         # コメントから コマンド処理
         pass

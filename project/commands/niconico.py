@@ -68,10 +68,10 @@ class NicoNico(Command):
                 logger.warning("loading skip a color command")
                 continue
 
-    def process_comment(self, text):
+    def process_comment(self, comment):
 
-        name = text[0] + " : "
-        text = text[1]
+        name = comment[0] + " : "
+        text = comment[1]
         text_len = len(text)
         speed = self.speed
         color = self.default_color["font_color"]

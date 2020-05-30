@@ -42,8 +42,8 @@ class Rain(Command):
                 logger.warning("loading skip a rain command")
                 continue
 
-    def process_comment(self, text):
-        text = text[1]
+    def process_comment(self, comment):
+        text = comment[1]
 
         def get_render():
             r   = rnd.choice(values[4])

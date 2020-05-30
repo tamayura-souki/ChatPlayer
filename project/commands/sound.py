@@ -23,8 +23,8 @@ class Sound(Command):
                 logger.warning("loading skip a sound command")
                 continue
 
-    def process_comment(self, text):
-        text = text[1]
+    def process_comment(self, comment):
+        text = comment[1]
 
         for command, render in self.sound_commands.items():
             if command not in text:
