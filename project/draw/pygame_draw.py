@@ -129,7 +129,7 @@ class PygameWindow(DrawWindow):
             self.clock = pygame.time.Clock()
 
         except:
-            logger.exception("Error during pygame initialize")
+            logger.error("Error during pygame initialize")
             traceback.print_exc()
             sys.exit(-1)
 
