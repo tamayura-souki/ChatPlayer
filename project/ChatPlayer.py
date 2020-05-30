@@ -39,6 +39,7 @@ class ChatPlayer:
 
     def process_comment(self, comment:[str,str]):
 
+        # 絵文字未対応 orz
         comment[0] = ''.join(
             c for c in comment[0] if not c in emoji.UNICODE_EMOJI
         )
