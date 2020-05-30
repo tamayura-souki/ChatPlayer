@@ -39,8 +39,12 @@ class ChatPlayer:
 
     def process_comment(self, comment:[str,str]):
 
-        comment[0] = ''.join(c for c in comment[0] if not c in emoji.UNICODE_EMOJI)
-        comment[1] = ''.join(c for c in comment[1] if not c in emoji.UNICODE_EMOJI)
+        comment[0] = ''.join(
+            c for c in comment[0] if not c in emoji.UNICODE_EMOJI
+        )
+        comment[1] = ''.join(
+            c for c in comment[1] if not c in emoji.UNICODE_EMOJI
+        )
 
         if not comment[1]:
             return False
