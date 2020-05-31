@@ -30,7 +30,8 @@ def main(config, chat_config_path):
     except:
         logger.error("Error during LiveChat initialize")
         traceback.print_exc()
-        sys.exit(-1)
+        pg_window.quit()
+        return True
 
     @pg_window.main
     def loop():
