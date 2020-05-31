@@ -26,7 +26,9 @@ class PygameStrRender(Render):
 
     @classmethod
     def set_font(cls, font_name:str, font_size:int):
-        cls.font = pygame.font.SysFont(font_name, font_size)
+        if ".ttf" not in font_name:
+            font_name = pygame.font.match_font(font_name)
+        cls.font = pygame.font.Font(font_name, font_size)
 
     def __init__(self,
         text:str=None,
