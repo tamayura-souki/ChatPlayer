@@ -59,9 +59,9 @@ YouTubeLive のチャットで遊ぶためのコード。チャットを取得�
 		初速と加速度を設定できます。
 
 # Requirements
-- pychat(https://github.com/taizan-hokuto/pytchat)
-- pygame(https://www.pygame.org/news)
-- emoji(https://pypi.org/project/emoji/)
+- pytchat(https://github.com/taizan-hokuto/pytchat)
+- pygame(https://github.com/pygame/pygame)
+- emoji(https://github.com/carpedm20/emoji/)
 
 # License
 MIT
