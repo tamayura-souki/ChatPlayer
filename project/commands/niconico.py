@@ -113,6 +113,9 @@ class NicoNico(Command):
             v = [ -speed, 0 ]
         )
 
+        if speed < 0:
+            render.pos[0] = -render.size[0]
+
         self.now_line += 1
         if self.now_line >= self.line_n:
             self.now_line = 0
