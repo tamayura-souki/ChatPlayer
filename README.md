@@ -22,31 +22,37 @@ YouTubeLive のチャットで遊ぶためのコード。チャットを取得�
 /unk チャンネル名非表示
 
 ## 使い方
-起動して出てくるウィンドウのIDと書かれた横に、配信のID(URLの中にあるやつ)を入力して、okボタンを押してください。
+起動して出てくるウィンドウのURLと書かれた横に、配信のURLを入力して、okボタンを押してください。
 何もなければ、緑色の画面にコメントが流れます。
 
-- setting.json
+- config.json
     - "chat_id" ここに配信のIDを入力します。(起動時にソフト上で入力できます)
-	- "win_size" の [縦の解像度, 横の解像度] でウィンドウの解像度を変更できます。
-	- "back_color" の [R, G, B] で背景色を指定出来ます。
+	- "window_size" の [縦の解像度, 横の解像度] でウィンドウの解像度を変更できます。
+	- "background_color" の [R, G, B] で背景色を指定出来ます。
 
-- chat_setting.json
-	- "taboo_words" : ["単語", "単語"] で指定した単語を含むコメントを表示しません。
-	
-	- "oo_words" : ["単語", "単語"] で指定した単語を"〇〇"に置き換えます。
-	
-	- "plain_font_path" でデフォルトで使用するフォントファイルを指定できます。
-		
+- chat_config.json
+	- "taboo_words" : ["単語", "単語", ...] で指定した単語を含むコメントを表示しません。
+
+	- "oo_words" : ["単語", "単語", ...] で指定した単語を"〇〇"に置き換えます。
+
+	- "font"
+		- "name" : "path or name" 使用したいフォントファイルのパスを入力してください。
+		- "size" で フォントのサイズを指定できます。
+
 	- "sound_commands" で音声系のコマンドの設定が出来ます。\
 	    新規に増やすことも出来ます。\
 	    ※pygame(使用しているライブラリ)の仕様上、wavとoggのみロード出来ます。
-		
-	- "speed_commands" で文字の速度を変更するコマンドを設定できます。\
-	    "speed" でマイナスを指定すると、逆から流れます。
-		
-	- "color_commands" で文字色を変更するコマンドを設定できます。\
-		[R,G,B]で指定してください。\
-		"outline_color" は1ドットだけついてる縁色の設定です。
+
+	- "niconico_commands" で 横に流れる文字について設定できます。
+		- "line_n" で行数を設定できます。
+		- "speed" で文字の流れる速さを設定できます。
+
+		- "speed_commands" で文字の速度を変更するコマンドを設定できます。\
+		    "speed" でマイナスを指定すると、逆から流れます。
+
+		- "color_commands" で文字色を変更するコマンドを設定できます。\
+			[R,G,B]で指定してください。\
+			"outline_color" は1ドットだけついてる縁色の設定です。
 
 	- "rain_commands" で文字がランダムに降ってくるコマンドを設定できます。\
 		"time" の秒数だけ、ランダムに"drops" 内のいずれかの文字が上から降ります。\
@@ -54,8 +60,8 @@ YouTubeLive のチャットで遊ぶためのコード。チャットを取得�
 
 # Requirements
 - pychat(https://github.com/taizan-hokuto/pytchat)
-- pygame
-- emoji
+- pygame(https://www.pygame.org/news)
+- emoji(https://pypi.org/project/emoji/)
 
 # License
-[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
+MIT
