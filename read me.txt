@@ -74,6 +74,9 @@ Youtube : https://www.youtube.com/channel/UCRQ6fe53K3Qh-6FzPaGMUXw
 
 
 － 履歴 －
+2020/06/10 ver 0.3.1
+	URL入力のバグを修正
+
 2020/05/31 ver 0.3
 	内部の処理を大幅変更。
 	配信の指定を、IDだけでなく、URLでもできるようにした。

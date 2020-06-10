@@ -16,7 +16,7 @@ def main(config_path):
     def ok():
         config["chat_id"] = txt.get()
         if '/' in config["chat_id"]:
-            config["chat_id"] = re.search(r"\?v=([^&]+)", config["chat_id"])
+            config["chat_id"] = re.search(r"[\?\&]v=([^&]+)", config["chat_id"])
             if config["chat_id"] is None:
                 logger.error("Invalid video id")
                 return None
