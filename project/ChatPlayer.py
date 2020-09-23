@@ -2,7 +2,7 @@ import emoji
 
 from config import logger
 from utils import load_json
-from draw import PygameStrRender, PygameWindow
+from draw import PygameStrRender, PygameWindow, time_ms
 from commands import NicoNico, Rain, Sound
 
 class ChatPlayer:
@@ -33,9 +33,32 @@ class ChatPlayer:
             )
             self.commands = [sound, rain, nn]
 
+            # テスト関連
+            self.test_comments = [
+                [str(c2) for c2 in c]
+                for c in config["tests"]["comments"]
+                if len(c) == 2
+            ]
+            self.test_rate = float(config["tests"]["rate"]) * 1000
+            self.tested_n  = -1
+            self.old_time  = time_ms()
+
         except:
             logger.error("failed at loading chat config")
             return None
+
+    def test(self, test_event:bool):
+        if test_event and self.tested_n < 0:
+            self.tested_n = 0
+
+        if len(self.test_comments) == self.tested_n:
+            self.tested_n = -1
+
+        elif self.tested_n >= 0:
+            if time_ms() - self.old_time > self.test_rate:
+                self.process_comment(self.test_comments[self.tested_n])
+                self.old_time = time_ms()
+                self.tested_n += 1
 
     def process_comment(self, comment:[str,str]):
 

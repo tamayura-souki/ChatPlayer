@@ -4,7 +4,7 @@ import traceback
 from pytchat import LiveChat
 
 from config import logger
-from draw import PygameWindow, get_quit_event
+from draw import PygameWindow, get_quit_event, get_test_event
 from ChatPlayer import ChatPlayer
 
 def main(config, chat_config_path):
@@ -39,6 +39,8 @@ def main(config, chat_config_path):
             chat_getter.terminate()
             pg_window.quit()
             sys.exit(0)
+
+        chat_player.test(get_test_event())
 
     while True:
         loop()

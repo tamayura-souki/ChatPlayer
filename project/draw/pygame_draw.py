@@ -13,6 +13,10 @@ from .pygame_utilities import textOutline
 def get_quit_event():
     return any(e.type == QUIT for e in pygame.event.get())
 
+def get_test_event():
+    key_states = pygame.key.get_pressed()
+    return all([key_states[K_LCTRL], key_states[K_t]])
+
 class PygameStrRender(Render):
     screen = None
     screen_size = (0,0)
