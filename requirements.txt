@@ -1,3 +1,0 @@
-pytchat
-pygame
-emoji
