@@ -1,3 +1,4 @@
+import dataclasses
 from . import logger
 from . import PygameStrRender, GroupRender
 
@@ -6,12 +7,20 @@ from .command_util import *
 
 import random as rnd
 
+@dataclasses.dataclass
+class RainConfig:
+    raindrop_n: int
+    interval: float
+    v: tuple[float, float]
+    a: tuple[float, float]
+    renders: list
+
 class Rain(Command):
     def __init__(self, screen_size, commands, n_per_s=30.0, **kwargs):
         super().__init__(**kwargs)
         self.screen_size = screen_size
 
-        self.rain_commands = {}
+        self.rain_commands:dict[str, RainConfig] = {}
         for c in commands:
             try:
                 command = get_command(c)
@@ -35,7 +44,9 @@ class Rain(Command):
                     for d in drops
                 ]
 
-                self.rain_commands[command] = [n, interval, v0, a, renders]
+                self.rain_commands[command] = RainConfig(
+                    n, interval, v0, a, renders
+                )
 
             except:
                 logger.warning("loading skip a rain command")
@@ -45,14 +56,14 @@ class Rain(Command):
         text = comment.message
 
         def get_render():
-            r   = rnd.choice(values[4])
+            r   = rnd.choice(values.renders)
             pos = [ float(rnd.randrange(0,self.screen_size[0])),
                     float(-r.get_height())]
             return PygameStrRender(
                 render = r,
                 pos    = pos,
-                v      = [0.0,values[2]],
-                a      = [0.0,values[3]]
+                v      = [0.0,values.v],
+                a      = [0.0,values.a]
             )
 
         for command, values in self.rain_commands.items():
@@ -60,8 +71,8 @@ class Rain(Command):
                 continue
 
             return GroupRender(
-                values[1],
-                [get_render() for _ in range(values[0])]
+                values.interval,
+                [get_render() for _ in range(values.raindrop_n)]
             )
 
         return None
