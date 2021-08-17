@@ -1,6 +1,5 @@
 import sys
 import traceback
-from typing import Tuple
 
 import pygame
 from pygame.locals import *
