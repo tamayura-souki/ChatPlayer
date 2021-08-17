@@ -1,7 +1,12 @@
-def get_command(config):
+from typing import Any
+
+def get_command(config:dict[str, Any]) -> str:
+    """
+    設定からコマンド名を取り出す関数
+    """
     command = str(config.get("command", ""))
     if not command:
-        Exception
+        Exception("command not found")
     return command
 
 def normalize_color(color):
