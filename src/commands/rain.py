@@ -4,7 +4,6 @@ from . import PygameStrRender, GroupRender
 from .command import Command, CommentData
 from .command_util import *
 
-import time as std_t
 import random as rnd
 
 class Rain(Command):
