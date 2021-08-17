@@ -1,0 +1,68 @@
+{
+    "taboo_words" : ["ロリ巨乳"],
+    "oo_words" : ["巨乳"],
+
+    "font" : {
+        "name" : "yugothicregularyugothicuisemilight",
+        "size" : 50
+    },
+
+    "sound_commands" : [
+        {"command":"/w",      "volume" : 0.5, "path" : "source/sound/laugh.wav"},
+        {"command":"/police", "volume" : 0.5, "path" : "source/sound/police.wav"},
+        {"command":"/medic",  "volume" : 0.5, "path" : "source/sound/medic.wav"},
+        {"command":"/tot",    "volume" : 0.7, "path" : "source/sound/tot.wav"}
+    ],
+
+    "niconico_commands" : {
+        "line_n" : 12,
+        "speed"  : 4,
+        "default_color" : {"font_color":[255,255,255], "outline_color":[0,0,0]},
+
+        "unkown_command" : "/unk",
+
+        "speed_commands" : [
+            {"command":"/fast",  "speed": 2.0},
+            {"command":"/slow",  "speed": 0.375},
+            {"command":"/-fast", "speed": -2.0},
+            {"command":"/-run",  "speed": -1},
+            {"command":"/-slow", "speed": -0.375}
+        ],
+
+        "color_commands" : [
+            {"command":"/red",   "font_color": [255,0,0], "outline_color": [255,255,255]},
+            {"command":"/blue",  "font_color": [0,0,255], "outline_color": [255,255,255]},
+            {"command":"/green", "font_color": [0,255,0], "outline_color": [30,30,30]},
+            {"command":"/bk",    "font_color": [0,0,0],   "outline_color": [255,255,255]}
+        ]
+    },
+
+    "rain_commands" : [
+        {"command":"/snow", "time":4, "v0":6, "accel":-0.02, "drops": "*＊`○◎●゜☆", "color": [255,255,255]},
+        {"command":"/rain", "time":4, "v0":10, "accel":0, "drops": "|", "color": [210,250,255]},
+        {"command":"/blood", "time":3, "v0":0, "accel":0.1, "drops":"●", "color":[120, 0, 0]},
+        {"command":"/pray", "time":1, "v0":8.5, "accel":-0.05, "drops": "†", "color": [255,255,230]},
+        {"command":"/ray", "time":2, "v0":10, "accel":0, "drops": "|", "color": [255,255,100]}
+    ],
+
+    "tests" : {
+        "rate" : 1,
+        "comments" : [
+            ["珠響そうき", "/w"], ["珠響そうき", "/police"],
+            ["珠響そうき", "/medic"], ["珠響そうき", "/tot"],
+            ["珠響そうき", "普通のテスト"], ["珠響そうき", "匿名化テスト/unk"],
+            ["珠響そうき", "伏せ字テスト : 巨乳はクソ"],
+            ["珠響そうき", "禁句テスト : ロリ巨乳は論外"],
+            ["珠響そうき", "高速かつ赤色テスト/fast/red"],
+            ["珠響そうき", "低速かつ青色テスト/slow/blue"],
+            ["珠響そうき", "逆走かつ緑色テスト/-run/green"],
+            ["珠響そうき", "高速逆走かつ黒色テスト/-fast/bk"],
+            ["珠響そうき", "低速逆走テスト/-slow"],
+            ["珠響そうき", "雪を降らせるテスト/snow"],
+            ["珠響そうき", "雨を降らせるテスト/rain"],
+            ["珠響そうき", "血を降らせるテスト/blood"],
+            ["珠響そうき", "祈りを降らせるテスト/pray"],
+            ["珠響そうき", "光を降らせるテスト/ray"]
+        ]
+    }
+}
