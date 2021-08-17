@@ -21,10 +21,10 @@ class NicoNico(Command):
         try:
             dc = kwargs["default_color"]
             fc = normalize_color(dc["font_color"])
-            oc = normalize_color(oc["outline_color"])
+            oc = normalize_color(dc["outline_color"])
             self.default_color = {"font_color":fc, "outline_color":oc}
         except:
-            pass
+            logger.warning(f"invalid default_color")
 
         # 匿名化コマンド
         try:
