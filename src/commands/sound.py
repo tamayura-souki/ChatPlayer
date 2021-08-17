@@ -1,7 +1,7 @@
 from . import logger
 from . import PygameSoundRender
 
-from .command import Command
+from .command import Command, CommentData
 from .command_util import *
 
 
@@ -23,8 +23,8 @@ class Sound(Command):
                 logger.warning("loading skip a sound command")
                 continue
 
-    def process_comment(self, comment):
-        text = comment[1]
+    def process_comment(self, comment:CommentData):
+        text = comment.message
 
         for command, render in self.sound_commands.items():
             if command not in text:

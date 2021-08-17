@@ -1,3 +1,4 @@
+from src.commands.command import CommentData
 import emoji
 
 from config import logger
@@ -56,32 +57,37 @@ class ChatPlayer:
 
         elif self.tested_n >= 0:
             if time_ms() - self.old_time > self.test_rate:
-                self.process_comment(self.test_comments[self.tested_n])
+                self.process_comment(
+                    CommentData(
+                        self.test_comments[self.tested_n][0],
+                        self.test_comments[self.tested_n][1]
+                    )
+                )
                 self.old_time = time_ms()
                 self.tested_n += 1
 
-    def process_comment(self, comment:[str,str]):
+    def process_comment(self, comment:CommentData):
 
         # 絵文字未対応 orz
-        comment[0] = ''.join(
-            c for c in comment[0] if not c in emoji.UNICODE_EMOJI
+        comment.author_name = ''.join(
+            c for c in comment.author_name if not c in emoji.UNICODE_EMOJI
         )
-        comment[1] = ''.join(
-            c for c in comment[1] if not c in emoji.UNICODE_EMOJI
+        comment.message = ''.join(
+            c for c in comment.message if not c in emoji.UNICODE_EMOJI
         )
 
-        if not comment[1]:
+        if not comment.message:
             return False
 
         # taboo_word を含んだコメントを許すな
         for taboo in self.taboo_words:
-            if taboo in comment[0] or taboo in comment[1]:
+            if taboo in comment.author_name or taboo in comment.message:
                 return False
 
         # oo_word は伏せる
         for oo in self.oo_words:
-            comment[0] = comment[0].replace(oo, "〇〇")
-            comment[1] = comment[1].replace(oo, "〇〇")
+            comment.author_name = comment.author_name.replace(oo, "〇〇")
+            comment.message = comment.message.replace(oo, "〇〇")
 
 
         for command in self.commands:

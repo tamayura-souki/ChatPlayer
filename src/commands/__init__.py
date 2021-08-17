@@ -11,6 +11,7 @@ except:
         Render, PygameStrRender, PygameSoundRender, GroupRender, PygameWindow
     )
 
+from .command import CommentData
 from .niconico import NicoNico
 from .rain import Rain
 from .sound import Sound

@@ -1,7 +1,7 @@
 from . import logger
 from . import PygameStrRender
 
-from .command import Command
+from .command import Command, CommentData
 from .command_util import *
 
 class NicoNico(Command):
@@ -68,10 +68,10 @@ class NicoNico(Command):
                 logger.warning("loading skip a color command")
                 continue
 
-    def process_comment(self, comment):
+    def process_comment(self, comment:CommentData):
 
-        name = comment[0] + " : "
-        text = comment[1]
+        name = comment.author_name + " : "
+        text = comment.message
         text_len = len(text)
         speed = self.speed
         color = self.default_color["font_color"]

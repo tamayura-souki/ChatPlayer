@@ -3,6 +3,7 @@ import traceback
 
 from pytchat import LiveChat
 
+from commands import CommentData
 from config import logger
 from draw import PygameWindow, get_quit_event, get_test_event
 from ChatPlayer import ChatPlayer
@@ -21,7 +22,9 @@ def main(config, chat_config_path):
     chat_player = ChatPlayer(pg_window, chat_config_path)
     def process_comment(data):
         for c in data.items:
-            chat_player.process_comment([c.author.name, c.message])
+            chat_player.process_comment(
+                CommentData(c.author.name, c.message)
+            )
             data.tick()
 
     try:

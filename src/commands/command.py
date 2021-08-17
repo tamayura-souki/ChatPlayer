@@ -1,5 +1,11 @@
+from dataclasses import dataclass
 from abc import ABCMeta, abstractmethod
 from . import Render
+
+@dataclass
+class CommentData:
+    author_name: str
+    message: str
 
 class Command(metaclass=ABCMeta):
     @abstractmethod
@@ -7,6 +13,6 @@ class Command(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def process_comment(self, comment:[str,str]) -> Render:
+    def process_comment(self, comment:CommentData) -> Render:
         # コメントから コマンド処理
         pass
