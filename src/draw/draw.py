@@ -1,7 +1,5 @@
 from abc import ABCMeta, abstractmethod
 
-from typing import Tuple
-
 from . import logger
 class Render(metaclass=ABCMeta):
     """
@@ -17,10 +15,10 @@ class DrawWindow(metaclass=ABCMeta):
     描画ライブラリで絶対に必要な処理をまとめる
     """
     def __init__(self,
-        window_size:Tuple[int, int]=(1280, 720),
+        window_size:tuple[int, int]=(1280, 720),
         window_caption:str="ChatPlayer",
         fps:int=30,
-        bg_color:Tuple[int,int]=(0,255,0)
+        bg_color:tuple[int,int,int]=(0,255,0)
         ):
 
         self.window_size = window_size
