@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # https://www.pygame.org/pcr/hollow_outline/index.php
 
 import pygame, pygame.font, pygame.image
